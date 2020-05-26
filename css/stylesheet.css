@@ -19,11 +19,13 @@ html {
   text-align: center;
   height: 100%;
   width: 100%;
-  display: inline-block;
+  display: flex;
   border-style: solid;
   border-color: gray;
   border-width: 2px;
   border-radius: 10px;
+  align-items: center;
+  justify-content: center;
 }
 
 #container {
@@ -38,11 +40,13 @@ html {
   margin-bottom: 10px;
   border: none;
   background-color: #73ff50;
+  font-size: 20px;
 }
 
 #container input {
   text-align: center;
   padding: 4px;
+  font-size: 20px;
 }
 
 #names {
