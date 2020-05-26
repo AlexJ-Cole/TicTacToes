@@ -7,7 +7,7 @@ const gameBoard = (function () {
     const container = document.querySelector('#main');
     for (i = 0; i < 9; i++) {
         let tile = document.createElement('div');
-        tile.id = `tile${i+1}`;
+        tile.id = `tile${i}`;
         tile.className = 'tile';
         tile.textContent = board[i];
         tile.addEventListener('click', game.takeTurn);
@@ -19,7 +19,7 @@ const gameBoard = (function () {
   const place = e => {
     if (e.target.textContent === '') {
       e.target.textContent = game.getCurrentPlayer();
-      board[e.target.id] = game.getCurrentPlayer();
+      board[e.target.id.slice(4, 5)] = game.getCurrentPlayer();
     } else {
         return false;
     }
@@ -42,7 +42,6 @@ const gameBoard = (function () {
       }
       if (set.size === 1 && !set.has('-')) {
         game.over(0);
-        console.log('hi');
       }
     }
   };
@@ -62,11 +61,12 @@ const gameBoard = (function () {
   const reset = () => {
       board = ['', '', '', '', '', '', '', '', ''];
       refresh();
+      document.querySelector('#display').textContent = "Tic Tac Toe"
   }
 
   const refresh = () => {
       for (i = 0; i < 9; i++) {
-        document.querySelector(`#tile${i+1}`).textContent = board[i];
+        document.querySelector(`#tile${i}`).textContent = board[i];
       }
   }
 
@@ -125,7 +125,6 @@ const game = (function () {
       }
     h1.textContent = message;
     lockGame();
-    createResetButton();
   }
 
   const getWinner = () => {
@@ -140,13 +139,13 @@ const game = (function () {
 
   const lockGame = () => {
     for (i = 0; i < 9; i++) {
-      document.querySelector(`#tile${i+1}`).removeEventListener('click',game.takeTurn);
+      document.querySelector(`#tile${i}`).removeEventListener('click',game.takeTurn);
     }
   }
 
   const unlockGame = () => {
     for (i = 0; i < 9; i++) {
-      document.querySelector(`#tile${i+1}`).addEventListener('click',game.takeTurn);
+      document.querySelector(`#tile${i}`).addEventListener('click',game.takeTurn);
     }
   }
 
