@@ -2,7 +2,8 @@ const gameBoard = (function () {
   //stores x/o values of spaces on board
   let board = ['', '', '', '', '', '', '', '', ''];
 
-  //renders display - creates tile div for each item in board
+  //renders display - creates div  with id tile[0-8] for each 
+    //item in board
   const display = () => {
     const container = document.querySelector('#main');
     for (i = 0; i < 9; i++) {
@@ -12,6 +13,7 @@ const gameBoard = (function () {
         tile.textContent = board[i];
         tile.addEventListener('click', game.takeTurn);
         container.appendChild(tile);
+        game.displayCurrentPlayer();
     }
   }
 
@@ -61,16 +63,17 @@ const gameBoard = (function () {
   const reset = () => {
       board = ['', '', '', '', '', '', '', '', ''];
       refresh();
-      document.querySelector('#display').textContent = "Tic Tac Toe"
+      document.querySelector('#display').textContent = `${game.getCurrentPlayerName()}! It\'s your turn!`;
   }
 
+  //updates every tile with its value in gameBoard.board array
   const refresh = () => {
       for (i = 0; i < 9; i++) {
         document.querySelector(`#tile${i}`).textContent = board[i];
       }
   }
 
-  return { board, display, place, checkWin, checkTie, reset };
+  return { display, place, checkWin, checkTie, reset };
 })();
 
 //player factory
@@ -91,6 +94,15 @@ const game = (function () {
   const getCurrentPlayer = () => {
     return currentPlayer;
   };
+
+  const getCurrentPlayerName = () => {
+    if (players[0].symbol === currentPlayer) {
+        return players[0].name;
+      } else {
+          return players[1].name;
+      }
+  }
+
   //Toggles currentPlayer between ['X', 'O'] and returns new value
   const swapCurrentPlayer = () => {
     if (currentPlayer === players[0].symbol) {
@@ -102,17 +114,28 @@ const game = (function () {
     }
   };
 
+  //executed when a tile is clicked
   const takeTurn = e => {
+    //if the tile is empty
     if (e.target.textContent === '') {
       gameBoard.place(e);
       gameBoard.checkWin();
       gameBoard.checkTie();
       swapCurrentPlayer();
+      displayCurrentPlayer();
     } else {
         return;
     }
   }
+   
+  const displayCurrentPlayer = () => {
+    const display = document.querySelector('#display');
+    if (!(players[0].winner || players[1].winner)) {
+      display.textContent = `${getCurrentPlayerName()}! It\'s your turn!`; 
+    }
+  }
 
+  //displays game over message(win or tie), lock the game
   const over = (tie) => {
     let h1 = document.querySelector('#display');
     if (tie == 1) {
@@ -126,38 +149,54 @@ const game = (function () {
     h1.textContent = message;
     lockGame();
   }
-
+  
+  //returns name of winning player
   const getWinner = () => {
     if (players[0].symbol === currentPlayer) {
       players[0].winner = true;
       return players[0].name;
     } else {
-        players[1].winnder = true;
+        players[1].winner = true;
         return players[1].name;
     }
   }
 
+  //removes event listeners from tiles
   const lockGame = () => {
     for (i = 0; i < 9; i++) {
       document.querySelector(`#tile${i}`).removeEventListener('click',game.takeTurn);
     }
   }
-
+  //adds event listeners to tiles
   const unlockGame = () => {
     for (i = 0; i < 9; i++) {
       document.querySelector(`#tile${i}`).addEventListener('click',game.takeTurn);
     }
   }
-
+  //resets game
   const reset = () => {
+    swapCurrentPlayer();
+    changePlayers();
     gameBoard.reset();
     unlockGame();
   }
 
-  const resetBtn = document.querySelector('#reset');
-  resetBtn.addEventListener('click', reset);
+  const changePlayers = () => {
+      players[0].name = p1.value;
+      players[1].name = p2.value;
+      displayCurrentPlayer();
+  }
 
-  return { takeTurn, getCurrentPlayer, over, lockGame, unlockGame }
+  const p1 = document.querySelector('#p1');
+  const p2 = document.querySelector('#p2');
+  p1.addEventListener('input', changePlayers);
+  p2.addEventListener('input', changePlayers);
+
+
+  const resetBtn = document.querySelector('#reset');
+  resetBtn.addEventListener('click', reset); 
+
+  return { displayCurrentPlayer, takeTurn, getCurrentPlayer, getCurrentPlayerName, over }
 })();
 
 gameBoard.display();
