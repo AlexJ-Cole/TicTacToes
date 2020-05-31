@@ -120,9 +120,11 @@ const game = (function () {
     if (e.target.textContent === '') {
       gameBoard.place(e);
       gameBoard.checkWin();
-      gameBoard.checkTie();
-      swapCurrentPlayer();
-      displayCurrentPlayer();
+      if (!(players[0].winner || players[1].winner)) {
+        gameBoard.checkTie();
+      }
+        swapCurrentPlayer();
+        displayCurrentPlayer();
     } else {
         return;
     }
@@ -139,6 +141,8 @@ const game = (function () {
   const over = (tie) => {
     let h1 = document.querySelector('#display');
     if (tie == 1) {
+      players[0].winner = true;
+      players[1].winner = true;
       message = 'It\'s a tie!'
       console.log(message);
     } else {
