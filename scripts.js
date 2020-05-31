@@ -132,7 +132,7 @@ const game = (function () {
    
   const displayCurrentPlayer = () => {
     const display = document.querySelector('#display');
-    if (!(players[0].winner || players[1].winner)) {
+    if (!(players[0].winner == true || players[1].winner == true)) {
       display.textContent = `${getCurrentPlayerName()}! It\'s your turn!`; 
     }
   }
@@ -179,8 +179,9 @@ const game = (function () {
   }
   //resets game
   const reset = () => {
-    swapCurrentPlayer();
     changePlayers();
+    players[0].winner = false;
+    players[1].winner = false;
     gameBoard.reset();
     unlockGame();
   }
