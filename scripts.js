@@ -144,11 +144,9 @@ const game = (function () {
       players[0].winner = true;
       players[1].winner = true;
       message = 'It\'s a tie!'
-      console.log(message);
     } else {
         winner = getWinner();
         message = `${winner} wins!`
-        console.log(message);
       }
     h1.textContent = message;
     lockGame();
